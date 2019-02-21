@@ -33,7 +33,7 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
     private static final String TAG = "CubeRenderer";
 
     private static final float ANGLE_INCREMENT = 1.2f;
-    private static final boolean CALCULATE_FPS = false;
+    private static final boolean CALCULATE_FPS = true;
 
     private Cube mCube;
     private float mAngle;
@@ -67,7 +67,7 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         // Set the camera position
-        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -10, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -100, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
         // Configure matrices for first cube
         Matrix.setIdentityM(mMMatrix, 0);
@@ -82,18 +82,22 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
 
         mCube.draw(mMVPMatrix, mChangeColor);
 
-        // Configure matrices for second cube
-        Matrix.setIdentityM(mMMatrix, 0);
+        for (float yy=-60; yy<60; yy+=0.5f) {
 
-        Matrix.translateM(mMMatrix, 0, 0.0f, 2.0f, 0.0f);
 
-        Matrix.setRotateM(mRotationMatrix, 0, -mAngle, 0.0f, 1.0f, 1.0f);
-        Matrix.multiplyMM(mMMatrix, 0, mRotationMatrix, 0, mMMatrix, 0);
+            // Configure matrices for second cube
+            Matrix.setIdentityM(mMMatrix, 0);
 
-        Matrix.multiplyMM(mMVMatrix, 0, mViewMatrix, 0, mMMatrix, 0);
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVMatrix, 0);
+            Matrix.translateM(mMMatrix, 0, 0.0f, yy, 0.0f);
 
-        mCube.draw(mMVPMatrix, mChangeColor);
+            Matrix.setRotateM(mRotationMatrix, 0, -mAngle, 0.0f, 1.0f, 1.0f);
+            Matrix.multiplyMM(mMMatrix, 0, mRotationMatrix, 0, mMMatrix, 0);
+
+            Matrix.multiplyMM(mMVMatrix, 0, mViewMatrix, 0, mMMatrix, 0);
+            Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVMatrix, 0);
+
+            mCube.draw(mMVPMatrix, mChangeColor);
+        }
 
         mAngle += ANGLE_INCREMENT;
     }
